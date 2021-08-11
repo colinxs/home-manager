@@ -95,6 +95,8 @@
 
 /modules/programs/i3status-rust.nix                   @workflow
 
+/modules/programs/java.nix                            @ShamrockLee
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/lazygit.nix                         @kalhauge
@@ -225,6 +227,8 @@
 
 /modules/services/dunst.nix                           @rycee
 
+/modules/services/easyeffects.nix                     @fufexan
+
 /modules/services/emacs.nix                           @tadfisher
 
 /modules/services/etesync-dav.nix                     @Valodim
@@ -265,6 +269,8 @@
 /modules/services/muchsync.nix                        @pacien
 
 /modules/services/network-manager-applet.nix          @rycee
+
+/modules/services/notify-osd.nix                      @imalison
 
 /modules/services/pantalaimon.nix                     @jojosch
 /tests/modules/services/pantalaimon                   @jojosch

@@ -77,6 +77,7 @@ let
     ./programs/i3status.nix
     ./programs/info.nix
     ./programs/irssi.nix
+    ./programs/java.nix
     ./programs/jq.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
@@ -156,6 +157,7 @@ let
     ./services/dropbox.nix
     ./services/dunst.nix
     ./services/dwm-status.nix
+    ./services/easyeffects.nix
     ./services/emacs.nix
     ./services/etesync-dav.nix
     ./services/flameshot.nix
@@ -182,6 +184,7 @@ let
     ./services/muchsync.nix
     ./services/network-manager-applet.nix
     ./services/nextcloud-client.nix
+    ./services/notify-osd.nix
     ./services/owncloud-client.nix
     ./services/pantalaimon.nix
     ./services/parcellite.nix
