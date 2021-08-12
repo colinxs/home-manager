@@ -2,7 +2,7 @@ name: SyncFork
 
 on:
   schedule:
-    - cron: '*/15 * * * *' # every 30 minutes
+    - cron: '0 8 * * *' # Daily at 0800 UTC/0000 PST 
   workflow_dispatch: # on button click
 
 jobs:
