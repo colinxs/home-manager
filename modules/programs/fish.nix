@@ -153,7 +153,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.fish;
-        defaultText = literalExample "pkgs.fish";
+        defaultText = literalExpression "pkgs.fish";
         description = ''
           The fish package to install. May be used to change the version.
         '';
@@ -162,7 +162,7 @@ in {
       shellAliases = mkOption {
         type = with types; attrsOf str;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             g = "git";
             "..." = "cd ../..";
@@ -227,7 +227,7 @@ in {
     programs.fish.plugins = mkOption {
       type = types.listOf pluginModule;
       default = [ ];
-      example = literalExample ''
+      example = literalExpression ''
         [
           {
             name = "z";
@@ -261,7 +261,7 @@ in {
     programs.fish.functions = mkOption {
       type = with types; attrsOf (either lines functionModule);
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           __fish_command_not_found_handler = {
             body = "__fish_default_command_not_found_handler $argv[1]";
@@ -340,41 +340,24 @@ in {
         # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated
         # automatically by home-manager.
 
-        # if we haven't sourced the general config, do it
-        if not set -q __fish_general_config_sourced
+        # Only execute this file once per shell.
+        set -q __fish_home_manager_config_sourced; and exit
+        set -g __fish_home_manager_config_sourced 1
 
-          set --prepend fish_function_path ${
-            if pkgs ? fishPlugins && pkgs.fishPlugins ? foreign-env then
-              "${pkgs.fishPlugins.foreign-env}/share/fish/vendor_functions.d"
-            else
-              "${pkgs.fish-foreign-env}/share/fish-foreign-env/functions"
-          }
-          fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
-          set -e fish_function_path[1]
+        set --prepend fish_function_path ${pkgs.fishPlugins.foreign-env}/share/fish/vendor_functions.d
+        fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
+        set -e fish_function_path[1]
 
-          ${cfg.shellInit}
-          # and leave a note so we don't source this config section again from
-          # this very shell (children will source the general config anew)
-          set -g __fish_general_config_sourced 1
+        ${cfg.shellInit}
 
-        end
-
-        # if we haven't sourced the login config, do it
-        status --is-login; and not set -q __fish_login_config_sourced
-        and begin
+        status --is-login; and begin
 
           # Login shell initialisation
           ${cfg.loginShellInit}
 
-          # and leave a note so we don't source this config section again from
-          # this very shell (children will source the general config anew)
-          set -g __fish_login_config_sourced 1
-
         end
 
-        # if we haven't sourced the interactive config, do it
-        status --is-interactive; and not set -q __fish_interactive_config_sourced
-        and begin
+        status --is-interactive; and begin
 
           # Abbreviations
           ${abbrsStr}
@@ -387,11 +370,6 @@ in {
 
           # Interactive shell intialisation
           ${cfg.interactiveShellInit}
-
-          # and leave a note so we don't source this config section again from
-          # this very shell (children will source the general config anew,
-          # allowing configuration changes in, e.g, aliases, to propagate)
-          set -g __fish_interactive_config_sourced 1
 
         end
       '';

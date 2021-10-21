@@ -97,7 +97,7 @@ in {
     settings = mkOption {
       type = types.attrs;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           color_scheme = 6;
           cpu_count_from_one = 0;
@@ -136,6 +136,13 @@ in {
         <filename>~/.config/htop/htoprc</filename>.
       '';
     };
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.htop;
+      defaultText = literalExpression "pkgs.htop";
+      description = "Package containing the <command>htop</command> program.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -143,7 +150,7 @@ in {
       inherit fields modes leftMeters rightMeters bar text graph led blank;
     };
 
-    home.packages = [ pkgs.htop ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."htop/htoprc" = let
       defaults = {

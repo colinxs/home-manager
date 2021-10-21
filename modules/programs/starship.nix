@@ -8,6 +8,8 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  starshipCmd = "${config.home.profileDirectory}/bin/starship";
+
 in {
   meta.maintainers = [ maintainers.marsam ];
 
@@ -17,7 +19,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.starship;
-      defaultText = literalExample "pkgs.starship";
+      defaultText = literalExpression "pkgs.starship";
       description = "The package to use for the starship binary.";
     };
 
@@ -31,7 +33,7 @@ in {
           entries = entryOrAttrsOf (entryOrAttrsOf entry);
         in attrsOf entries // { description = "Starship configuration"; };
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           add_newline = false;
           format = lib.concatStrings [
@@ -90,19 +92,19 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
-        eval "$(${cfg.package}/bin/starship init bash)"
+        eval "$(${starshipCmd} init bash)"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
-        eval "$(${cfg.package}/bin/starship init zsh)"
+        eval "$(${starshipCmd} init zsh)"
       fi
     '';
 
     programs.fish.promptInit = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"  -a \( -z "$INSIDE_EMACS"  -o "$INSIDE_EMACS" = "vterm" \)
-        eval (${cfg.package}/bin/starship init fish)
+        eval (${starshipCmd} init fish)
       end
     '';
   };

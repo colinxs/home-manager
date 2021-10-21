@@ -12,6 +12,8 @@ let
     specialArgs = {
       lib = extendedLib;
       darwinConfig = config;
+      osConfig = config;
+      modulesPath = ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
@@ -61,7 +63,6 @@ in
       extraSpecialArgs = mkOption {
         type = types.attrs;
         default = { };
-        example = literalExample "{ modulesPath = ../modules; }";
         description = ''
           Extra <literal>specialArgs</literal> passed to Home Manager.
         '';
@@ -74,7 +75,7 @@ in
             description = "Home Manager modules";
           });
         default = [ ];
-        example = literalExample "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+        example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
         description = ''
           Extra modules added to all users.
         '';

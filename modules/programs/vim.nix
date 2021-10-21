@@ -68,7 +68,7 @@ in {
       plugins = mkOption {
         type = with types; listOf (either str package);
         default = defaultPlugins;
-        example = literalExample "[ pkgs.vimPlugins.YankRing ]";
+        example = literalExpression "[ pkgs.vimPlugins.YankRing ]";
         description = ''
           List of vim plugins to install. To get a list of supported plugins run:
           <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</command>.
@@ -82,7 +82,7 @@ in {
       settings = mkOption {
         type = vimSettingsType;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             expandtab = true;
             history = 1000;
@@ -124,6 +124,13 @@ in {
         description = "Resulting customized vim package";
         readOnly = true;
       };
+
+      packageConfigurable = mkOption {
+        type = types.package;
+        description = "Configurable vim package";
+        default = pkgs.vim_configurable;
+        defaultText = "pkgs.vim_configurable";
+      };
     };
   };
 
@@ -135,7 +142,7 @@ in {
       ${cfg.extraConfig}
     '';
 
-    vim = pkgs.vim_configurable.customize {
+    vim = cfg.packageConfigurable.customize {
       name = "vim";
       vimrcConfig = {
         inherit customRC;

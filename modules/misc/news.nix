@@ -537,23 +537,6 @@ in
       }
 
       {
-        time = "2018-02-09T21:14:42+00:00";
-        condition = with config.programs.rofi; enable && colors != null;
-        message = ''
-          The new and preferred way to configure the rofi theme is
-          using rasi themes through the 'programs.rofi.theme' option.
-          This option can take as value either the name of a
-          pre-installed theme or the path to a theme file.
-
-          A rasi theme can be generated from an Xresources config
-          using 'rofi -dump-theme'.
-
-          The option 'programs.rofi.colors' is still supported but may
-          become deprecated and removed in the future.
-        '';
-      }
-
-      {
         time = "2018-02-19T21:45:26+00:00";
         message = ''
           A new module is available: 'programs.pidgin'
@@ -2194,6 +2177,52 @@ in
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.betterlockscreen'.
+        '';
+      }
+
+      {
+        time = "2021-09-14T21:31:03+00:00";
+        message = ''
+          A new module is available: 'programs.bottom'.
+        '';
+      }
+
+      {
+        time = "2021-09-23T17:04:48+00:00";
+        condition = hostPlatform.isLinux && config.services.screen-locker.enable;
+        message = ''
+          'xautolock' is now optional in 'services.screen-locker', and the
+          'services.screen-locker' options have been reorganized for clarity.
+          See the 'xautolock' and 'xss-lock' options modules in
+          'services.screen-locker'.
+        '';
+      }
+
+      {
+        time = "2021-10-05T20:55:07+00:00";
+        message = ''
+          A new module is available: 'programs.atuin'.
+        '';
+      }
+
+      {
+        time = "2021-10-05T22:15:00+00:00";
+        message = ''
+          A new module is available: 'programs.nnn'.
+        '';
+      }
+
+      {
+        time = "2021-10-08T22:16:50+00:00";
+        condition = hostPlatform.isLinux && config.programs.rofi.enable;
+        message = ''
+          Rofi version '1.7.0' removed many options that were used by the module
+          and replaced them with custom themes, which are more flexible and
+          powerful.
+
+          You can replicate your old configuration by moving those options to
+          'programs.rofi.theme'. Keep in mind that the syntax is different so
+          you may need to do some changes.
         '';
       }
     ];

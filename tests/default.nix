@@ -26,9 +26,12 @@ let
       # unnecessary rebuilds of the tests.
       manual.manpages.enable = false;
 
-      imports = [ ./asserts.nix ];
+      imports = [ ./asserts.nix ./stubs.nix ];
     }
   ];
+
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
 in
 
@@ -43,9 +46,11 @@ import nmt {
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
+    ./modules/programs/atuin
     ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/bat
+    ./modules/programs/bottom
     ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/dircolors
@@ -71,6 +76,7 @@ import nmt {
     ./modules/programs/neomutt
     ./modules/programs/newsboat
     ./modules/programs/nix-index
+    ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/pet
     ./modules/programs/powerline-go
@@ -88,12 +94,11 @@ import nmt {
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
-  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+  ] ++ lib.optionals isDarwin [
     ./modules/targets-darwin
-  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+  ] ++ lib.optionals isLinux [
     ./modules/config/i18n
     ./modules/i18n/input-method
-    ./modules/misc/debug
     ./modules/misc/gtk
     ./modules/misc/numlock
     ./modules/misc/pam
@@ -102,7 +107,6 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
-    ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
     ./modules/programs/gnome-terminal
@@ -120,6 +124,7 @@ import nmt {
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
+    ./modules/services/flameshot
     ./modules/services/fluidsynth
     ./modules/services/fnott
     ./modules/services/git-sync
@@ -130,6 +135,7 @@ import nmt {
     ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/redshift-gammastep
+    ./modules/services/screen-locker
     ./modules/services/sxhkd
     ./modules/services/syncthing
     ./modules/services/trayer
@@ -137,9 +143,13 @@ import nmt {
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
+    ./modules/services/xsettingsd
     ./modules/systemd
     ./modules/targets-linux
   ] ++ lib.optionals enableBig [
     ./modules/programs/emacs
+  ] ++ lib.optionals (enableBig && isLinux) [
+    ./modules/misc/debug
+    ./modules/programs/firefox
   ]);
 }

@@ -70,16 +70,16 @@ Currently the easiest way to install Home Manager is as follows:
 2.  Add the appropriate Home Manager channel. If you are following
     Nixpkgs master or an unstable channel you can run
 
-    ```console
-    $ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-    $ nix-channel --update
+    ```shell
+    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
     ```
 
     and if you follow a Nixpkgs version 21.05 channel you can run
 
-    ```console
-    $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
-    $ nix-channel --update
+    ```shell
+    nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+    nix-channel --update
     ```
 
     On NixOS you may need to log out and back in for the channel to
@@ -93,8 +93,8 @@ Currently the easiest way to install Home Manager is as follows:
 
 3.  Install Home Manager and create the first Home Manager generation:
 
-    ```console
-    $ nix-shell '<home-manager>' -A install
+    ```shell
+    nix-shell '<home-manager>' -A install
     ```
 
     Once finished, Home Manager should be active and available in your
@@ -103,12 +103,14 @@ Currently the easiest way to install Home Manager is as follows:
 3.  If you do not plan on having Home Manager manage your shell
     configuration then you must source the
 
-    ```
+    ```shell
     $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
     ```
 
     file in your shell configuration. This file can be sourced
     directly by POSIX.2-like shells such as [Bash][] or [Z shell][].
+    [Fish][] users can use utilities such as [foreign-env][] or
+    [babelfish][].
 
     For example, if you use Bash then add
 
@@ -123,9 +125,7 @@ Currently the easiest way to install Home Manager is as follows:
     . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
     ```
 
-    to your `~/.profile` file. For fish shell, it is possible to use
-    [foreign-env](https://github.com/oh-my-fish/plugin-foreign-env) to
-    source the file.
+    to your `~/.profile` file.
 
 If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the
@@ -191,14 +191,14 @@ To satisfy the above setup we should elaborate the
 
 To activate this configuration you can then run
 
-```console
-$ home-manager switch
+```shell
+home-manager switch
 ```
 
 or if you are not feeling so lucky,
 
-```console
-$ home-manager build
+```shell
+home-manager build
 ```
 
 which will create a `result` link to a directory containing an
@@ -208,8 +208,8 @@ Documentation of available configuration options, including
 descriptions and usage examples, is available in the [Home Manager
 manual][configuration options] or offline by running
 
-```console
-$ man home-configuration.nix
+```shell
+man home-configuration.nix
 ```
 
 Rollbacks
@@ -385,3 +385,6 @@ an issue.
 [samueldr]: https://github.com/samueldr/
 [Nix Pills]: https://nixos.org/nixos/nix-pills/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
+[Fish]: https://fishshell.com
+[foreign-env]: https://github.com/oh-my-fish/plugin-foreign-env
+[babelfish]: https://github.com/bouk/babelfish

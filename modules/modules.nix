@@ -45,11 +45,13 @@ let
     ./programs/alot.nix
     ./programs/aria2.nix
     ./programs/astroid.nix
+    ./programs/atuin.nix
     ./programs/autojump.nix
     ./programs/autorandr.nix
     ./programs/bash.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/chromium.nix
@@ -103,6 +105,7 @@ let
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/nix-index.nix
+    ./programs/nnn.nix
     ./programs/noti.nix
     ./programs/notmuch.nix
     ./programs/nushell.nix
@@ -212,9 +215,9 @@ let
     ./services/sxhkd.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
-    ./services/trayer.nix
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
+    ./services/trayer.nix
     ./services/udiskie.nix
     ./services/unclutter.nix
     ./services/unison.nix
@@ -239,7 +242,8 @@ let
     ./xsession.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
-  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix;
+  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
+    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
   pkgsModule = { config, ... }: {
     config = {

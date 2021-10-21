@@ -47,11 +47,20 @@ in {
     package = mkOption {
       type = types.package;
       default = if emacsCfg.enable then emacsCfg.finalPackage else pkgs.emacs;
-      defaultText = literalExample ''
+      defaultText = literalExpression ''
         if config.programs.emacs.enable then config.programs.emacs.finalPackage
         else pkgs.emacs
       '';
       description = "The Emacs package to use.";
+    };
+
+    extraOptions = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [ "-f" "exwm-enable" ];
+      description = ''
+        Extra command-line arguments to pass to <command>emacs</command>.
+      '';
     };
 
     client = {
@@ -111,7 +120,7 @@ in {
             # when using socket activation.
               optionalString cfg.socketActivation.enable
               "=${escapeShellArg socketPath}"
-            }"'';
+            } ${escapeShellArgs cfg.extraOptions}"'';
 
           # Emacs will exit with status 15 after having received SIGTERM, which
           # is the default "KillSignal" value systemd uses to stop services.

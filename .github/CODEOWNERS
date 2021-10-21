@@ -19,6 +19,8 @@
 
 /modules/misc/news.nix                                @rycee
 
+/modules/misc/nixpkgs-disabled.nix                    @thiagokokada
+
 /modules/misc/numlock.nix                             @evanjs
 /tests/modules/misc/numlock                           @evanjs
 
@@ -50,6 +52,9 @@
 /modules/programs/autojump.nix                        @evanjs
 /tests/modules/programs/autojump                      @evanjs
 
+/modules/programs/atuin.nix                           @hawkw
+/tests/modules/programs/atuin                         @hawkw
+
 /modules/programs/autorandr.nix                       @uvNikita
 
 /modules/programs/bash.nix                            @rycee
@@ -57,6 +62,9 @@
 /modules/programs/bat.nix                             @marsam
 
 /modules/programs/beets.nix                           @rycee
+
+/modules/programs/bottom.nix                          @polykernel
+/tests/modules/programs/bottom                        @polykernel
 
 /modules/programs/broot.nix                           @aheaume
 
@@ -75,8 +83,8 @@
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 
-/modules/programs/gh.nix                              @Gerschtli
-/tests/modules/programs/gh                            @Gerschtli
+/modules/programs/gh.nix                              @Gerschtli @berbiche
+/tests/modules/programs/gh                            @Gerschtli @berbiche
 
 /modules/programs/git.nix                             @rycee
 
@@ -140,6 +148,9 @@
 
 /modules/programs/nix-index.nix                       @ambroisie
 /tests/modules/programs/nix-index                     @ambroisie
+
+/modules/programs/nnn.nix                             @thiagokokada
+/tests/modules/programs/nnn                           @thiagokokada
 
 /modules/programs/noti.nix                            @marsam
 
@@ -308,6 +319,9 @@
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
 
+/modules/services/screen-locker.nix                   @jrobsonchase
+/tests/modules/services/screen-locker                 @jrobsonchase
+
 /modules/services/status-notifier-watcher.nix         @pltanton
 
 /modules/services/syncthing.nix                       @rycee
@@ -358,3 +372,5 @@
 /modules/xsession.nix                                 @rycee
 
 /modules/services/volnoti.nix                         @IvanMalison
+
+Makefile                                              @thiagokokada
