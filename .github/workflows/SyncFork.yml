@@ -9,7 +9,7 @@ jobs:
   SyncFork:
     runs-on: ubuntu-latest
     steps:
-      - uses: tgymnich/fork-sync@v1.3
+      - uses: tgymnich/fork-sync@v1.8
         with:
           owner: nix-community 
           base: master
