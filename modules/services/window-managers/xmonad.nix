@@ -25,10 +25,10 @@ in {
         defaultText = literalExpression "pkgs.haskellPackages";
         example = literalExpression "pkgs.haskell.packages.ghc784";
         description = ''
-          The <varname>haskellPackages</varname> used to build xmonad
+          The {var}`haskellPackages` used to build xmonad
           and other packages. This can be used to change the GHC
           version used to build xmonad and the packages listed in
-          <varname>extraPackages</varname>.
+          {var}`extraPackages`.
         '';
       };
 
@@ -44,7 +44,7 @@ in {
         description = ''
           Extra packages available to GHC when rebuilding xmonad. The
           value must be a function which receives the attribute set
-          defined in <varname>haskellPackages</varname> as the sole
+          defined in {var}`haskellPackages` as the sole
           argument.
         '';
       };
@@ -70,14 +70,13 @@ in {
         '';
         description = ''
           The configuration file to be used for xmonad. This must be
-          an absolute path or <literal>null</literal> in which case
-          <filename>~/.xmonad/xmonad.hs</filename> will not be managed
+          an absolute path or `null` in which case
+          {file}`~/.xmonad/xmonad.hs` will not be managed
           by Home Manager.
-          </para>
-          <para>
-          If this option is set to a non-<literal>null</literal> value,
+
+          If this option is set to a non-`null` value,
           recompilation of xmonad outside of Home Manager (e.g. via
-          <command>xmonad --recompile</command>) will fail.
+          {command}`xmonad --recompile`) will fail.
         '';
       };
 
@@ -94,7 +93,7 @@ in {
         '';
         description = ''
           Additional files that will be saved in
-          <filename>~/.xmonad/lib/</filename> and included in the configuration
+          {file}`~/.xmonad/lib/` and included in the configuration
           build. The keys are the file names while the values are paths to the
           contents of the files.
         '';
@@ -125,6 +124,7 @@ in {
               cfg.libFiles)
           })
           for key in "''${!libFiles[@]}"; do
+            mkdir -p "xmonad-config/lib/$(dirname "$key")"
             cp "''${libFiles[$key]}" "xmonad-config/lib/$key";
           done
 
@@ -132,9 +132,15 @@ in {
 
           # The resulting binary name depends on the arch and os
           # https://github.com/xmonad/xmonad/blob/56b0f850bc35200ec23f05c079eca8b0a1f90305/src/XMonad/Core.hs#L565-L572
-          mv "$XMONAD_DATA_DIR/xmonad-${pkgs.hostPlatform.system}" $out/bin/
+          if [ -f "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" ]; then
+            # xmonad 0.15.0
+            mv "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
+          else
+            # xmonad 0.17.0 (https://github.com/xmonad/xmonad/commit/9813e218b034009b0b6d09a70650178980e05d54)
+            mv "$XMONAD_CACHE_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
+          fi
         ''
-      }/bin/xmonad-${pkgs.hostPlatform.system}";
+      }/bin/xmonad-${pkgs.stdenv.hostPlatform.system}";
 
   in mkIf cfg.enable (mkMerge [
     {
@@ -157,7 +163,7 @@ in {
     (mkIf (cfg.config != null) {
       xsession.windowManager.command = xmonadBin;
       home.file.".xmonad/xmonad.hs".source = cfg.config;
-      home.file.".xmonad/xmonad-${pkgs.hostPlatform.system}" = {
+      home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
         source = xmonadBin;
         onChange = ''
           # Attempt to restart xmonad if X is running.

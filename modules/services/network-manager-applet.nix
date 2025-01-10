@@ -7,7 +7,7 @@ let
   cfg = config.services.network-manager-applet;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ maintainers.rycee maintainers.midirhee12 ];
 
   options = {
     services.network-manager-applet = {
@@ -21,6 +21,9 @@ in {
         lib.platforms.linux)
     ];
 
+    # The package provides some icons that are good to have available.
+    xdg.systemDirs.data = [ "${pkgs.networkmanagerapplet}/share" ];
+
     systemd.user.services.network-manager-applet = {
       Unit = {
         Description = "Network Manager applet";
@@ -32,10 +35,8 @@ in {
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
-        ExecStart = toString
-          ([ "${pkgs.networkmanagerapplet}/bin/nm-applet" "--sm-disable" ]
-            ++ optional config.xsession.preferStatusNotifierItems
-            "--indicator");
+        ExecStart = toString ([ "${pkgs.networkmanagerapplet}/bin/nm-applet" ]
+          ++ optional config.xsession.preferStatusNotifierItems "--indicator");
       };
     };
   };

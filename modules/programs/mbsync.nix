@@ -30,7 +30,7 @@ let
 
   genTlsConfig = tls:
     {
-      SSLType = if !tls.enable then
+      TLSType = if !tls.enable then
         "None"
       else if tls.useStartTls then
         "STARTTLS"
@@ -63,7 +63,7 @@ let
         if isList v then
           concatMapStringsSep " " (genValue n) v
         else if isBool v then
-          (if v then "yes" else "no")
+          lib.hm.booleans.yesNo v
         else if isInt v then
           toString v
         else if isString v && hasSpace v then
@@ -158,8 +158,8 @@ let
       genGroupsChannels = group:
         concatStringsSep "\n" (genChannelStrings group.name group.channels);
       # Generate all channel configurations for all groups for this account.
-    in concatStringsSep "\n" (filter (s: s != "")
-      (mapAttrsToList (name: group: genGroupsChannels group) groups));
+    in concatStringsSep "\n"
+    (remove "" (mapAttrsToList (name: group: genGroupsChannels group) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
@@ -174,12 +174,12 @@ let
         flatten (optionals (group.channels != { }) ([ "Group ${group.name}" ]
           ++ (genChannelStrings group.name group.channels)));
       # Given set of groups, generates list of strings, where each string is one
-      # of the groups and its consituent channels.
+      # of the groups and its constituent channels.
       genGroupsStrings = mapAttrsToList (name: info:
         concatStringsSep "\n" (genGroupChannelString groups.${name})) groups;
-    in concatStringsSep "\n\n" (filter (s: s != "")
-      genGroupsStrings) # filter for the cases of empty groups
-    + "\n"; # Put all strings together.
+      # Join all non-empty groups.
+      combined = concatStringsSep "\n\n" (remove "" genGroupsStrings) + "\n";
+    in combined;
 
   genGroupConfig = name: channels:
     let
@@ -267,7 +267,7 @@ in {
 
       programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
 
-      home.file.".mbsyncrc".text = let
+      xdg.configFile."isyncrc".text = let
         accountsConfig = map genAccountConfig mbsyncAccounts;
         # Only generate this kind of Group configuration if there are ANY accounts
         # that do NOT have a per-account groups/channels option(s) specified.
@@ -287,7 +287,7 @@ in {
       home.activation = mkIf (mbsyncAccounts != [ ]) {
         createMaildir =
           hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-            $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
+            run mkdir -m700 -p $VERBOSE_ARG ${
               concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
             }
           '';

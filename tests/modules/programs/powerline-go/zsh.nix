@@ -27,6 +27,9 @@ with lib;
       assertFileExists home-files/.zshrc
       assertFileContains \
         home-files/.zshrc \
+        'PS1='
+      assertFileContains \
+        home-files/.zshrc \
         '/bin/powerline-go -error $? -shell zsh -modules nix-shell -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
     '';
   };
