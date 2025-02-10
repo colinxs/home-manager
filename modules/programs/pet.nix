@@ -56,7 +56,7 @@ in {
       type = format.type;
       default = { };
       description = ''
-        Settings written to <filename>config.toml</filename>. See the pet
+        Settings written to {file}`config.toml`. See the pet
         documentation for details.
       '';
     };
@@ -66,7 +66,7 @@ in {
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
       description = ''
-        The package needed for the <varname>settings.selectcmd</varname>.
+        The package needed for the {var}`settings.selectcmd`.
       '';
     };
 
@@ -80,18 +80,28 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.pet.settings = {
-      selectcmd = mkDefault "fzf";
-      snippetfile = config.xdg.configHome + "/pet/snippet.toml";
-    };
+    programs.pet.settings = let
+      defaultGeneral = {
+        selectcmd = mkDefault "fzf";
+        snippetfile = config.xdg.configHome + "/pet/snippet.toml";
+      };
+    in if versionAtLeast config.home.stateVersion "21.11" then {
+      General = defaultGeneral;
+    } else
+      defaultGeneral;
 
     home.packages = [ pkgs.pet cfg.selectcmdPackage ];
 
     xdg.configFile = {
-      "pet/config.toml".source =
-        format.generate "config.toml" { General = cfg.settings; };
-      "pet/snippet.toml".source =
-        format.generate "snippet.toml" { snippets = cfg.snippets; };
+      "pet/config.toml".source = format.generate "config.toml"
+        (if versionAtLeast config.home.stateVersion "21.11" then
+          cfg.settings
+        else {
+          General = cfg.settings;
+        });
+      "pet/snippet.toml" = mkIf (cfg.snippets != [ ]) {
+        source = format.generate "snippet.toml" { snippets = cfg.snippets; };
+      };
     };
   };
 }

@@ -1,16 +1,14 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 {
-  config = {
-    programs.kakoune = {
-      enable = true;
-      plugins = [ pkgs.kakounePlugins.kak-prelude ];
-    };
+  imports = [ ./stubs.nix ];
 
-    nmt.script = ''
-      assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
-    '';
+  programs.kakoune = {
+    enable = true;
+    plugins = [ pkgs.kakoune-test-plugin ];
   };
+
+  nmt.script = ''
+    assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
+  '';
 }
